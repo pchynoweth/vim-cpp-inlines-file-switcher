@@ -3,7 +3,7 @@ if !exists('g:cpp_inlines_file_switcher_inlines_file_suffix')
 endif
 
 if !exists('g:cpp_inlines_file_switcher_header_extensions')
-    let g:cpp_inlines_file_switcher_header_extensions = 'h,hxx,hpp'
+    let g:cpp_inlines_file_switcher_header_extensions = 'h,hh,hxx,hpp'
 endif
 
 command! INLINES call vim_cpp_inlines_file_switcher#switch()
