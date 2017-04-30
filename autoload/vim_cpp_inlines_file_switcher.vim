@@ -55,7 +55,7 @@ function! vim_cpp_inlines_file_switcher#switch() "{{{
         endif
         exec ':A'
         if !s:isHeaderFile()
-            echo 'Failed to find header file.  Aborting.'
+            echom 'Failed to find header file.  Aborting.'
             return 0
         endif
         let l:isSrcFile = 1
@@ -63,9 +63,63 @@ function! vim_cpp_inlines_file_switcher#switch() "{{{
 
     if !s:headerToInlines()
         if l:isSrcFile
+            echom 'No inlines file found'
             exec ':A'
+            return 0
         endif
     endif
 
-    return 0
+    return 1
+endfunction "}}}
+
+" always jump to source file regardless of the current file type
+function! vim_cpp_inlines_file_switcher#switchSrc() "{{{
+    if !exists(':A')
+        echom 'need a.vim plugin to switch'
+        return 0
+    endif
+
+    let l:isInl = 0
+    if s:isInlinesFile()
+        let l:isInl = 1
+        call s:inlinesToHeader()
+    endif
+
+    if !s:isHeaderFile()
+        echom 'No header file found'
+        return 0
+    endif
+
+    exec ':A'
+
+    if s:isHeaderFile()
+        echom 'No source file found'
+        if l:isInl
+            call s:headerToInlines()
+        endif
+        return 0
+    endif
+
+    return 1
+endfunction "}}}
+
+" always jump to header file regardless of the current file type
+function! vim_cpp_inlines_file_switcher#switchHeader() "{{{
+    if !exists(':A')
+        echom 'need a.vim plugin to switch'
+        return 0
+    endif
+
+    if s:isInlinesFile()
+        call s:inlinesToHeader()
+    else
+        exec ':A'
+    endif
+
+    if !s:isHeaderFile()
+        echom 'No header file found'
+        return 0
+    endif
+
+    return 1
 endfunction "}}}
